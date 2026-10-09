@@ -4885,3 +4885,18 @@ img {
     transition: none;
   }
 }
+
+/* Оновлений прайс консультацій */
+.price-list { padding: 100px 0; background: var(--cream); color: var(--brown); }
+.price-list__eyebrow { font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: var(--olive); }
+.price-list h2 { margin: 16px 0 44px; font: 400 clamp(42px, 5vw, 76px)/1.08 var(--font-display); letter-spacing: -.045em; }
+.price-list h2 em { color: var(--olive); font-weight: 400; }
+.price-list__grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 32px; }
+.price-list__group { padding: 32px; border: 1px solid rgba(78,64,53,.2); }
+.price-list__group--wide { grid-column: 1 / -1; }
+.price-list__group h3 { margin: 0 0 24px; font: 400 clamp(25px, 2.6vw, 38px)/1.1 var(--font-display); }
+.price-list__line { display: flex; justify-content: space-between; align-items: baseline; gap: 18px; padding: 17px 0; border-top: 1px solid rgba(78,64,53,.16); font-size: 14px; line-height: 1.5; }
+.price-list__line strong { white-space: nowrap; font-weight: 600; font-size: 16px; }
+.price-list__line small { display: block; color: var(--taupe); font-size: 12px; }
+.price-list__button { margin-top: 32px; }
+@media (max-width: 700px) { .price-list { padding: 64px 0; } .price-list__grid { grid-template-columns: 1fr; gap: 16px; } .price-list__group { padding: 24px 18px; } .price-list__group--wide { grid-column: auto; } .price-list__line { font-size: 13px; } .price-list__line strong { font-size: 14px; } }
