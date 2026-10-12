@@ -86,6 +86,10 @@ img {
   letter-spacing: 0.08em;
   text-transform: uppercase;
 }
+
+.logo__caption b {
+  font-size: 16px;
+}
 .nav {
   display: flex;
   justify-content: center;
@@ -589,6 +593,10 @@ img {
     font-size: 12px;
     margin-top: 8px;
   }
+
+  .logo__caption b {
+    font-size: 16px;
+  }
   .burger {
     width: 40px;
     height: 40px;
@@ -1013,7 +1021,7 @@ img {
 }
 @media (max-width: 599px) {
   .logo__name {
-    font-size: 16px;
+    font-size: 20px;
   }
   .logo__caption {
     letter-spacing: 0.1em;
@@ -2489,7 +2497,7 @@ img {
 
 .help-grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
+  grid-template-columns: repeat(2, minmax(0, 1fr));
   gap: 20px;
 }
 
@@ -2610,6 +2618,12 @@ img {
   font-size: 16px;
   line-height: 1.75;
   opacity: 0.84;
+}
+
+.help-card__description span {
+  font-size: 12px;
+  display: block;
+  margin-top: 10px;
 }
 
 /* ==========================================
@@ -2772,6 +2786,13 @@ img {
   font-weight: 400;
   line-height: 1.05;
   letter-spacing: -0.05em;
+}
+
+.help-chat h3 span {
+  font-size: 14px;
+  padding-top: 0;
+  letter-spacing: normal;
+  padding-left: 4px;
 }
 
 .help-chat h3 em {
@@ -2951,6 +2972,10 @@ img {
 
   .help-chat h3 {
     font-size: 43px;
+  }
+  .help-chat h3 span {
+    margin-top: 0px;
+    display: block;
   }
 
   .help-chat__button {
@@ -3914,6 +3939,12 @@ img {
   line-height: 1.8;
 
   color: #81776b;
+}
+
+.story__education-head p em {
+  font-size: 12px;
+  display: block;
+  margin-top: 15px;
 }
 
 /* ==========================================
@@ -4887,16 +4918,319 @@ img {
 }
 
 /* Оновлений прайс консультацій */
-.price-list { padding: 100px 0; background: var(--cream); color: var(--brown); }
-.price-list__eyebrow { font-size: 11px; letter-spacing: .16em; text-transform: uppercase; color: var(--olive); }
-.price-list h2 { margin: 16px 0 44px; font: 400 clamp(42px, 5vw, 76px)/1.08 var(--font-display); letter-spacing: -.045em; }
-.price-list h2 em { color: var(--olive); font-weight: 400; }
-.price-list__grid { display: grid; grid-template-columns: repeat(2, minmax(0,1fr)); gap: 32px; }
-.price-list__group { padding: 32px; border: 1px solid rgba(78,64,53,.2); }
-.price-list__group--wide { grid-column: 1 / -1; }
-.price-list__group h3 { margin: 0 0 24px; font: 400 clamp(25px, 2.6vw, 38px)/1.1 var(--font-display); }
-.price-list__line { display: flex; justify-content: space-between; align-items: baseline; gap: 18px; padding: 17px 0; border-top: 1px solid rgba(78,64,53,.16); font-size: 14px; line-height: 1.5; }
-.price-list__line strong { white-space: nowrap; font-weight: 600; font-size: 16px; }
-.price-list__line small { display: block; color: var(--taupe); font-size: 12px; }
-.price-list__button { margin-top: 32px; }
-@media (max-width: 700px) { .price-list { padding: 64px 0; } .price-list__grid { grid-template-columns: 1fr; gap: 16px; } .price-list__group { padding: 24px 18px; } .price-list__group--wide { grid-column: auto; } .price-list__line { font-size: 13px; } .price-list__line strong { font-size: 14px; } }
+.price-list {
+  padding: 100px 0;
+  background: var(--cream);
+  color: var(--brown);
+}
+.price-list__eyebrow {
+  font-size: 11px;
+  letter-spacing: 0.16em;
+  text-transform: uppercase;
+  color: var(--olive);
+}
+.price-list h2 {
+  margin: 16px 0 44px;
+  font: 400 clamp(42px, 5vw, 76px)/1.08 var(--font-display);
+  letter-spacing: -0.045em;
+}
+.price-list h2 em {
+  color: var(--olive);
+  font-weight: 400;
+}
+.price-list__grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 32px;
+}
+.price-list__group {
+  padding: 32px;
+  border: 1px solid rgba(78, 64, 53, 0.2);
+}
+.price-list__group--wide {
+  grid-column: 1 / -1;
+}
+.price-list__group h3 {
+  margin: 0 0 24px;
+  font: 400 clamp(25px, 2.6vw, 38px)/1.1 var(--font-display);
+}
+.price-list__line {
+  display: flex;
+  justify-content: space-between;
+  align-items: baseline;
+  gap: 18px;
+  padding: 17px 0;
+  border-top: 1px solid rgba(78, 64, 53, 0.16);
+  font-size: 14px;
+  line-height: 1.5;
+}
+.price-list__line strong {
+  white-space: nowrap;
+  font-weight: 600;
+  font-size: 16px;
+}
+.price-list__line small {
+  display: block;
+  color: var(--taupe);
+  font-size: 12px;
+}
+.price-list__button {
+  margin-top: 32px;
+}
+@media (max-width: 700px) {
+  .price-list {
+    padding: 64px 0;
+  }
+  .price-list__grid {
+    grid-template-columns: 1fr;
+    gap: 16px;
+  }
+  .price-list__group {
+    padding: 24px 18px;
+  }
+  .price-list__group--wide {
+    grid-column: auto;
+  }
+  .price-list__line {
+    font-size: 13px;
+  }
+  .price-list__line strong {
+    font-size: 14px;
+  }
+}
+
+/* ==========================================
+   REQUESTS — SAME DESIGN AS HELP SECTION
+========================================== */
+
+.requests-section {
+  padding-top: 110px;
+  padding-bottom: 130px;
+  background-color: #fff;
+}
+
+.requests-grid {
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 24px;
+}
+
+.requests-card {
+  min-height: 900px;
+}
+
+.requests-card .help-card__visual {
+  height: 370px;
+}
+
+.requests-card .help-card__body {
+  padding: 0 42px 40px;
+}
+
+.requests-card h3 {
+  font-size: clamp(44px, 4.2vw, 65px);
+}
+
+.requests-card__list {
+  list-style: none;
+  padding: 0;
+  margin: 0 0 36px;
+}
+
+.requests-card__list li {
+  position: relative;
+  padding: 12px 0 12px 22px;
+  font-size: 15px;
+  line-height: 1.6;
+}
+
+.requests-card__list li::before {
+  content: "";
+  position: absolute;
+  top: 23px;
+  left: 0;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: var(--olive);
+}
+
+.requests-card--olive,
+.requests-card.help-card--olive {
+  color: var(--cream);
+}
+
+.requests-card.help-card--olive .requests-card__list li::before {
+  background: var(--cream);
+}
+
+.requests-card .help-card__button {
+  margin-top: auto;
+}
+
+/* TABLET */
+
+@media (max-width: 991px) {
+  .requests-grid {
+    gap: 16px;
+  }
+
+  .requests-card {
+    min-height: 850px;
+  }
+
+  .requests-card .help-card__visual {
+    height: 290px;
+  }
+
+  .requests-card .help-card__body {
+    padding: 0 25px 30px;
+  }
+
+  .requests-card h3 {
+    font-size: 42px;
+  }
+
+  .requests-card__list li {
+    font-size: 13px;
+  }
+}
+
+/* MOBILE */
+
+@media (max-width: 700px) {
+  .requests-section {
+    padding: 70px 0;
+  }
+
+  .requests-grid {
+    grid-template-columns: 1fr;
+    gap: 22px;
+  }
+
+  .requests-card {
+    min-height: 0;
+  }
+
+  .requests-card .help-card__visual {
+    height: clamp(310px, 85vw, 450px);
+  }
+
+  .requests-card .help-card__body {
+    padding: 0 27px 30px;
+  }
+
+  .requests-card h3 {
+    font-size: clamp(39px, 10vw, 56px);
+  }
+
+  .requests-card__list li {
+    font-size: 14px;
+  }
+
+  .requests-card .help-card__button {
+    margin-top: 10px;
+  }
+}
+
+/* FOUR SERVICE CARDS */
+
+.help-grid {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  align-items: stretch;
+  gap: 28px;
+}
+
+.help-card {
+  display: flex;
+  flex-direction: column;
+  height: 100%;
+  min-width: 0;
+}
+
+.help-card__body {
+  display: flex;
+  flex: 1;
+  flex-direction: column;
+  height: auto;
+  min-height: 0;
+}
+
+.help-card__includes {
+  margin: 5px 0 30px;
+}
+
+.help-card__includes-title {
+  display: block;
+  margin-bottom: 16px;
+  font-family: var(--font-body, "Manrope", sans-serif);
+  font-size: 11px;
+  font-weight: 600;
+  line-height: 1.5;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: inherit;
+  opacity: 0.75;
+}
+
+.help-card__includes-list {
+  list-style: none;
+  padding: 0;
+  margin: 0;
+}
+
+.help-card__includes-list li {
+  position: relative;
+  padding: 11px 0 2px 19px;
+  font-family: var(--font-body, "Manrope", sans-serif);
+  font-size: 13px;
+  line-height: 1.6;
+}
+
+.help-card__includes-list li:last-child {
+  border-bottom: 0;
+}
+
+.help-card__includes-list li::before {
+  content: "";
+  position: absolute;
+  left: 0;
+  top: 19px;
+  width: 5px;
+  height: 5px;
+  border-radius: 50%;
+  background: currentColor;
+  opacity: 0.7;
+}
+
+.help-card__note {
+  margin: 0 0 25px;
+  font-family: var(--font-body, "Manrope", sans-serif);
+  font-size: 12px;
+  line-height: 1.7;
+  opacity: 0.8;
+}
+
+.help-card__note span {
+  display: block;
+  margin-top: 4px;
+}
+
+.help-card__button {
+  margin-top: auto;
+}
+
+@media (max-width: 767px) {
+  .help-grid {
+    grid-template-columns: 1fr;
+    gap: 22px;
+  }
+
+  .help-card__includes {
+    margin: 24px 0 28px;
+  }
+
+  .help-card__includes-list li {
+    padding-block: 10px;
+  }
+}
