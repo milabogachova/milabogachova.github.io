@@ -711,3 +711,147 @@ if (aboutSection) {
 
   journeyObserver.observe(section.querySelector(".approach__journey"));
 })();
+
+/* ==========================================
+   REVIEWS — IPHONE CAROUSEL
+========================================== */
+
+(() => {
+  const root = document.querySelector("[data-reviews-slider]");
+  if (!root) return;
+
+  const viewport = root.querySelector("[data-reviews-viewport]");
+  const track = root.querySelector("[data-reviews-track]");
+  const prev = root.querySelector("[data-reviews-prev]");
+  const next = root.querySelector("[data-reviews-next]");
+  const counter = root.querySelector("[data-reviews-counter]");
+
+  const section = root.closest(".reviews");
+  const dialog = section.querySelector("[data-reviews-lightbox]");
+  const full = section.querySelector("[data-reviews-full]");
+  const close = section.querySelector("[data-reviews-close]");
+
+  if (!viewport || !track || !prev || !next || !counter) return;
+
+  const slides = [...track.children];
+  if (!slides.length) return;
+
+  let index = 0;
+  let touchStartX = null;
+
+  function visibleSlides() {
+    if (window.innerWidth <= 700) return 1;
+    if (window.innerWidth <= 1100) return 2;
+    return 3;
+  }
+
+  function maxIndex() {
+    return Math.max(0, slides.length - visibleSlides());
+  }
+
+  function update() {
+    index = Math.max(0, Math.min(index, maxIndex()));
+
+    const gap = parseFloat(getComputedStyle(track).gap) || 0;
+    const width = slides[0].getBoundingClientRect().width;
+    const offset = index * (width + gap);
+
+    track.style.transform = `translate3d(-${offset}px, 0, 0)`;
+
+    const from = String(index + 1).padStart(2, "0");
+    const to = String(
+      Math.min(index + visibleSlides(), slides.length),
+    ).padStart(2, "0");
+    const total = String(slides.length).padStart(2, "0");
+
+    counter.textContent = `${from} — ${to} / ${total}`;
+
+    slides.forEach((slide, i) => {
+      const active = i >= index && i < index + visibleSlides();
+
+      slide.setAttribute("aria-hidden", String(!active));
+
+      const button = slide.querySelector("button");
+      if (button) button.tabIndex = active ? 0 : -1;
+    });
+  }
+
+  function move(direction) {
+    if (direction > 0) {
+      index = index >= maxIndex() ? 0 : index + 1;
+    } else {
+      index = index <= 0 ? maxIndex() : index - 1;
+    }
+    update();
+  }
+
+  prev.addEventListener("click", () => move(-1));
+  next.addEventListener("click", () => move(1));
+
+  // SWIPE
+  viewport.addEventListener(
+    "touchstart",
+    (event) => {
+      touchStartX = event.touches[0].clientX;
+    },
+    { passive: true },
+  );
+
+  viewport.addEventListener(
+    "touchend",
+    (event) => {
+      if (touchStartX === null) return;
+
+      const delta = event.changedTouches[0].clientX - touchStartX;
+
+      if (Math.abs(delta) > 45) {
+        move(delta < 0 ? 1 : -1);
+      }
+
+      touchStartX = null;
+    },
+    { passive: true },
+  );
+
+  // KEYBOARD
+  viewport.addEventListener("keydown", (event) => {
+    if (event.target.closest("button")) return;
+
+    if (event.key === "ArrowRight") {
+      event.preventDefault();
+      move(1);
+    }
+
+    if (event.key === "ArrowLeft") {
+      event.preventDefault();
+      move(-1);
+    }
+  });
+
+  // OPEN FULL IMAGE
+  root.querySelectorAll(".reviews__phone").forEach((button) => {
+    button.addEventListener("click", () => {
+      if (!dialog || !full) return;
+
+      const img = button.querySelector("img");
+      if (!img) return;
+
+      full.src = img.src;
+      full.alt = img.alt;
+      dialog.showModal();
+    });
+  });
+
+  // CLOSE LIGHTBOX
+  if (dialog && close) {
+    close.addEventListener("click", () => dialog.close());
+
+    dialog.addEventListener("click", (event) => {
+      if (event.target === dialog) dialog.close();
+    });
+  }
+
+  window.addEventListener("resize", update);
+
+  update();
+})();
