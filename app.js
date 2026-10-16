@@ -216,9 +216,16 @@ if (aboutSection) {
    AUDIENCE — AUTO CAROUSEL
 ========================================== */
 
+/* ==========================================
+   AUDIENCE — INFINITE CAROUSEL + NAVIGATION
+========================================== */
+
 (() => {
   const slider = document.querySelector("[data-audience-slider]");
   const track = document.querySelector("[data-audience-track]");
+  const prevButton = document.querySelector("[data-audience-prev]");
+  const nextButton = document.querySelector("[data-audience-next]");
+  const counter = document.querySelector("[data-audience-counter]");
 
   if (!slider || !track) return;
 
@@ -230,72 +237,81 @@ if (aboutSection) {
   const mobile = window.matchMedia("(max-width: 700px)");
   const reducedMotion = window.matchMedia("(prefers-reduced-motion: reduce)");
 
-  let index = 0;
-  let timer = null;
-  let startX = 0;
+  let startX = null;
   let isAnimating = false;
 
-  const getVisible = () => (mobile.matches ? 1 : 3);
+  const getVisible = () => Math.min(mobile.matches ? 1 : 3, total);
 
-  // Клони потрібні для безшовного переходу
-  // від останньої картки до першої.
+  // INFINITE LOOP CLONES
+
+  const cloneCount = Math.min(3, total);
 
   const clonesBefore = originalCards
-    .slice(-3)
+    .slice(-cloneCount)
     .map((card) => card.cloneNode(true));
 
   const clonesAfter = originalCards
-    .slice(0, 3)
+    .slice(0, cloneCount)
     .map((card) => card.cloneNode(true));
 
   clonesBefore.forEach((card) => {
     card.setAttribute("aria-hidden", "true");
+    card.inert = true;
     track.insertBefore(card, track.firstChild);
   });
 
   clonesAfter.forEach((card) => {
     card.setAttribute("aria-hidden", "true");
+    card.inert = true;
     track.appendChild(card);
   });
 
   const offset = clonesBefore.length;
   let position = offset;
 
+  // COUNTER
+
+  const updateCounter = () => {
+    if (!counter) return;
+
+    const visible = getVisible();
+
+    const current = (((position - offset) % total) + total) % total;
+
+    const first = String(current + 1).padStart(2, "0");
+
+    const last = String(((current + visible - 1) % total) + 1).padStart(2, "0");
+
+    const all = String(total).padStart(2, "0");
+
+    counter.textContent = `${first} — ${last} / ${all}`;
+  };
+
+  // CARD WIDTH + GAP
+
   const getStep = () => {
     const card = track.children[0];
     const gap = parseFloat(getComputedStyle(track).gap) || 0;
+
     return card.getBoundingClientRect().width + gap;
   };
 
+  // MOVE TRACK
+
   const moveTo = (pos, animate = true) => {
-    track.style.transition = animate
-      ? "transform .9s cubic-bezier(.22, 1, .36, 1)"
-      : "none";
+    track.style.transition =
+      animate && !reducedMotion.matches
+        ? "transform .9s cubic-bezier(.22, 1, .36, 1)"
+        : "none";
 
     track.style.transform = `translate3d(${-pos * getStep()}px, 0, 0)`;
+
+    updateCounter();
   };
 
-  const next = () => {
-    if (isAnimating) return;
+  // INFINITE LOOP RESET
 
-    isAnimating = true;
-    position++;
-    moveTo(position);
-  };
-
-  const previous = () => {
-    if (isAnimating) return;
-
-    isAnimating = true;
-    position--;
-    moveTo(position);
-  };
-
-  track.addEventListener("transitionend", (event) => {
-    if (event.target !== track || event.propertyName !== "transform") return;
-
-    isAnimating = false;
-
+  const normalizePosition = () => {
     if (position >= offset + total) {
       position -= total;
       moveTo(position, false);
@@ -305,28 +321,46 @@ if (aboutSection) {
       position += total;
       moveTo(position, false);
     }
+  };
+
+  // NEXT / PREVIOUS
+
+  const move = (direction) => {
+    if (isAnimating) return;
+
+    position += direction;
+
+    if (reducedMotion.matches) {
+      moveTo(position, false);
+      normalizePosition();
+      return;
+    }
+
+    isAnimating = true;
+    moveTo(position, true);
+  };
+
+  const next = () => move(1);
+  const previous = () => move(-1);
+
+  track.addEventListener("transitionend", (event) => {
+    if (event.target !== track || event.propertyName !== "transform") return;
+
+    isAnimating = false;
+    normalizePosition();
   });
 
-  const stop = () => {
-    clearInterval(timer);
-    timer = null;
-  };
+  // NAVIGATION BUTTONS
 
-  const start = () => {
-    stop();
+  nextButton?.addEventListener("click", next);
+  prevButton?.addEventListener("click", previous);
 
-    if (reducedMotion.matches) return;
-
-    timer = setInterval(next, 4000);
-  };
-
-  // Swipe на мобільному
+  // TOUCH SWIPE
 
   slider.addEventListener(
     "touchstart",
     (event) => {
       startX = event.touches[0].clientX;
-      stop();
     },
     { passive: true },
   );
@@ -334,43 +368,60 @@ if (aboutSection) {
   slider.addEventListener(
     "touchend",
     (event) => {
+      if (startX === null) return;
+
       const delta = event.changedTouches[0].clientX - startX;
 
       if (Math.abs(delta) > 45) {
-        if (delta < 0) next();
-        else previous();
+        if (delta < 0) {
+          next();
+        } else {
+          previous();
+        }
       }
 
-      start();
+      startX = null;
     },
     { passive: true },
   );
 
-  // Пауза, коли користувач наводить мишку
+  slider.addEventListener(
+    "touchcancel",
+    () => {
+      startX = null;
+    },
+    { passive: true },
+  );
 
-  slider.addEventListener("mouseenter", stop);
-  slider.addEventListener("mouseleave", start);
+  // KEYBOARD NAVIGATION
 
-  // Пауза, коли вкладка неактивна
+  slider.addEventListener("keydown", (event) => {
+    if (event.target.closest("button, a")) return;
 
-  document.addEventListener("visibilitychange", () => {
-    if (document.hidden) stop();
-    else start();
+    if (event.key === "ArrowRight") {
+      event.preventDefault();
+      next();
+    }
+
+    if (event.key === "ArrowLeft") {
+      event.preventDefault();
+      previous();
+    }
   });
 
-  // Перерахунок ширини при зміні екрана
+  // RESIZE
 
   window.addEventListener("resize", () => {
+    isAnimating = false;
     moveTo(position, false);
+    normalizePosition();
   });
 
-  reducedMotion.addEventListener?.("change", start);
-
-  // Початкове положення
+  // INITIAL STATE
 
   moveTo(position, false);
-  start();
 })();
+
 /* ==========================================
    PROJECTS — RESPONSIVE CAROUSEL
 ========================================== */
